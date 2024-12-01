@@ -1,47 +1,84 @@
-# Svelte + TS + Vite
+# Svelte + TS + Vite + Tailwindcss + Skeleton UI
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+## Svelte extension template
 
-## Recommended IDE Setup
+A template for creating browser extensions using:
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+- [Svelte](https://svelte.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [Skeleton UI](https://www.skeleton.dev/)
 
-## Need an official Svelte framework?
+|                         Firefox                          |                         Chromium / Edge                         |
+| :------------------------------------------------------: | :-------------------------------------------------------------: |
+| ![Screenshot of the extension in Firefox](./firefox.png) | ![Screenshot of the extension in Edge/Chromium](./chromium.png) |
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## Structure
 
-## Technical considerations
+It has two entry-points to create `Popup` and `Options` pages:
 
-**Why use this over SvelteKit?**
+- `popup/index.html`
+- `options/index.html`
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+By default, when running the dev server, it will launch the `/src/popup/index.html` page. Go to [this section](#modifying-dev-server-launch-page) to modify the run dev behavior.
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+## Usage
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+1. Clone the repository `git clone https://github.com/ankur700/svelte-extension-template.git`
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+2. Run `pnpm install`
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+3. Run `pnpm run watch` to start a dev server with HMR or `pnpm run build` to build for production
 
-**Why include `.vscode/extensions.json`?**
+## Setup
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+### Creating or removing pages
 
-**Why enable `allowJs` in the TS template?**
+1. Edit the build.input object inside Vite config
 
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
 ```
+   //vite.config.ts
+   input: {
+       popup: fileURLToPath(
+         new URL('./src/popup/index.html', import.meta.url)
+       ),
+       options: fileURLToPath(
+         new URL('./src/options/index.html', import.meta.url)
+       ),
+     },
+```
+
+2. Insert entry-point/page by inserting `entry-point: path-to-page` pair inside the object.
+   Ex: Adding an about page:
+
+```
+    //vite.config.ts
+    input: {
+        popup: fileURLToPath(
+          new URL('./src/popup/index.html', import.meta.url)
+        ),
+        options: fileURLToPath(
+          new URL('./src/options/index.html', import.meta.url)
+        ),
+        about: fileURLToPath(
+          new URL('./src/about/index.html', import.meta.url)
+        ),
+      },
+```
+
+4. Create a `main.ts`, `index.html` and - optionally - `about.svelte` file in the `src/about` folder for the page similar to how it is done in `src/popup` folder and `src/options` folder.
+
+### Creating or removing path aliases
+
+1. Open `vite.config.ts`
+
+2. Insert a path alias in resolve.alias obj using `'alias': resolve-relative-path-to-alias` key-value pair. Ex: `'$types': fileURLToPath(new URL('./src/lib/types', import.meta.url))`
+
+3. Open `tsconfig.json` and add the alias contents there as well. Ex: for `@types` alias add `"$types/*": ["./src/lib/types/*"],` to the paths obj. This step is not required, it is only to let JS / TS know about the alias to stop showing errors.
+
+Note: @types won't work, as tsconfig.ts uses this alias inside node_modules/@types
+
+### Modifying dev server launch page
+
+Open `vite.config.ts` file and edit `server.open` to the location you want the dev server to open by default.
