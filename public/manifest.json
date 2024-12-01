@@ -3,10 +3,7 @@
   "name": "Svelte Browser Extension",
   "description": "A simple example which serves as a template for creating browser extensions.",
   "version": "0.0.1",
-  "author": {
-    "name": "Ankur Singh Chauhan",
-    "email": "abishek.singh.chauhan@gmail.com"
-  },
+  "author": "abishek.singh.chauhan@gmail.com",
   "action": {
     "default_title": "Svelte Browser Extension",
     "default_popup": "./src/popup/index.html",

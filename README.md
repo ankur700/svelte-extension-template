@@ -12,7 +12,7 @@ A template for creating browser extensions using:
 
 |                         Firefox                          |                         Chromium / Edge                         |
 | :------------------------------------------------------: | :-------------------------------------------------------------: |
-| ![Screenshot of the extension in Firefox](./firefox.png) | ![Screenshot of the extension in Edge/Chromium](./chromium.png) |
+| ![Screenshot of the extension in Firefox](./firefox.png) | ![Screenshot of the extension in Edge/Chromium](./chrome.png) |
 
 ## Structure
 
